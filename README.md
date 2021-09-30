@@ -4,7 +4,7 @@ It's an API project to study repository pattern and table relationship in e-comm
 
 ## Usage
 
-Clone repository
+Clone the repository
 
 ```bash
 git clone https://github.com/victor-bern/go_ecommerce.git
