@@ -10,8 +10,8 @@ type ProductInventoryRepository interface {
 	GetByProductId(productid string) models.ProductInventory
 	All() ([]models.ProductInventory, error)
 	InserProductInInventory(product models.ProductInventory) (models.ProductInventory, error)
-	Update(product models.ProductInventory, id string) (models.ProductInventory, error)
-	Delete(id string) error
+	UpdateProductStock(productid string, rq int) error
+	DeleteProductInventory(id string) error
 }
 
 type ProductInventoryRepo struct {
@@ -100,5 +100,35 @@ func (pir *ProductInventoryRepo) InserProductInInventory(pi models.ProductInvent
 	}
 
 	return pi, nil
+}
 
+func (pir *ProductInventoryRepo) UpdateProductStock(productid string, rq int) error {
+	productInventory, err := pir.GetByProductId(productid)
+	if err != nil {
+		return err
+	}
+	stmt, err := pir.db.Prepare("UPDATE product_inventory SET stock = $1 WHERE product_id = $2")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Query(productInventory.Stock-rq, productid)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (pir *ProductInventoryRepo) DeleteProductInventory(id string) error {
+	stmt, err := pir.db.Prepare("DELETE FROM product_inventory WHERE id = $1")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Query(id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
