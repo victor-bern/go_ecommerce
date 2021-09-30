@@ -36,7 +36,6 @@ func GetProductByTitle(ctx *fiber.Ctx) {
 	}
 
 	ctx.Status(200).JSON(product)
-
 }
 
 func InsertProduct(ctx *fiber.Ctx) {
