@@ -36,7 +36,7 @@ func (pr *ProductRepo) GetByTitle(name string) (models.Product, error) {
 		return models.Product{}, err
 	}
 
-	err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.Inventory, &product.CreatedAt, &product.UpdatedAt)
+	err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.CreatedAt, &product.UpdatedAt)
 	if err != nil {
 		return models.Product{}, err
 	}
@@ -56,7 +56,7 @@ func (pr *ProductRepo) GetById(id string) (models.Product, error) {
 		return models.Product{}, err
 	}
 
-	err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.Inventory, &product.CreatedAt, &product.UpdatedAt)
+	err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.CreatedAt, &product.UpdatedAt)
 	if err != nil {
 		return models.Product{}, err
 	}
@@ -77,7 +77,7 @@ func (pr *ProductRepo) All() ([]models.Product, error) {
 	}
 	for result.Next() {
 		var product models.Product
-		result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.Inventory, &product.CreatedAt, &product.UpdatedAt)
+		result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.CreatedAt, &product.UpdatedAt)
 		products = append(products, product)
 	}
 
@@ -85,12 +85,12 @@ func (pr *ProductRepo) All() ([]models.Product, error) {
 }
 
 func (pr *ProductRepo) InserProduct(product models.Product) (models.Product, error) {
-	stmt, err := pr.db.Prepare("INSERT INTO product (title, description, price, inventory) VALUES ($1, $2, $3, $4)")
+	stmt, err := pr.db.Prepare("INSERT INTO product (title, description, price) VALUES ($1, $2, $3)")
 	if err != nil {
 		return models.Product{}, err
 	}
 
-	_, err = stmt.Query(product.Title, product.Description, product.Price, product.Inventory)
+	_, err = stmt.Query(product.Title, product.Description, product.Price)
 	if err != nil {
 		return models.Product{}, err
 	}
