@@ -11,7 +11,7 @@ type ProductRepository interface {
 	GetById(id string) (models.Product, error)
 	All() ([]models.Product, error)
 	InserProduct(product models.Product) (models.Product, error)
-	Update(product models.Product, id string) (models.Product, error)
+	UpdateProduct(product models.Product, id string) error
 	Delete(id string) error
 }
 
@@ -109,4 +109,21 @@ func (pr *ProductRepo) InserProduct(product models.Product, quantity int) (model
 		return models.Product{}, err
 	}
 	return product, nil
+}
+
+func (pr *ProductRepo) UpdateProduct(product models.Product, id string) error {
+	_, err := pr.GetById(id)
+	if err != nil {
+		return err
+	}
+	stmt, err := pr.db.Prepare("UPDATE product SET title = $1, description = $2, price = $3 WHERE id = $4")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Query(product.Title, product.Description, product.Price, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
