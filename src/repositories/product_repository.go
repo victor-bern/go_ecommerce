@@ -12,7 +12,7 @@ type ProductRepository interface {
 	All() ([]models.Product, error)
 	InserProduct(product models.Product) (models.Product, error)
 	UpdateProduct(product models.Product, id string) error
-	Delete(id string) error
+	DeleteProduct(id string) error
 }
 
 type ProductRepo struct {
@@ -125,5 +125,19 @@ func (pr *ProductRepo) UpdateProduct(product models.Product, id string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (pr *ProductRepo) DeleteProduct(id string) error {
+	stmt, err := pr.db.Prepare("DELETE FROM product WHERE id = $1")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Query(id)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
