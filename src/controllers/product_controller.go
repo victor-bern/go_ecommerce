@@ -1,1 +1,54 @@
 package controllers
+
+import (
+	"pg-conn/src/database"
+	"pg-conn/src/models"
+	"pg-conn/src/repositories"
+
+	"github.com/gofiber/fiber"
+)
+
+func GetAllproduct(ctx *fiber.Ctx) {
+	productRepo := repositories.NewProductRepo(database.GetDatabase())
+
+	products, err := productRepo.All()
+	if err != nil {
+		ctx.Status(400).JSON(fiber.Map{
+			"Error": err.Error(),
+		})
+		return
+	}
+
+	ctx.Status(200).JSON(products)
+}
+
+func InsertProduct(ctx *fiber.Ctx) {
+	var product models.ProductRequest
+	productRepo := repositories.NewProductRepo(database.GetDatabase())
+
+	err := ctx.BodyParser(&product)
+	if err != nil {
+		ctx.Status(400).JSON(fiber.Map{
+			"Error": err.Error(),
+		})
+		return
+	}
+
+	newProduct := models.Product{
+		Title:       product.Title,
+		Description: product.Description,
+		Price:       product.Price,
+	}
+
+	_, err = productRepo.InserProduct(newProduct, product.Inventory)
+	if err != nil {
+		ctx.Status(400).JSON(fiber.Map{
+			"Error": err.Error(),
+		})
+		return
+	}
+
+	ctx.Status(200).JSON(fiber.Map{
+		"Message": "product created with success",
+	})
+}
