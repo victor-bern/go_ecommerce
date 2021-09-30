@@ -1,0 +1,10 @@
+SET TIMEZONE='America/Sao_Paulo';
+CREATE TABLE IF NOT EXISTS "user" (
+   id serial PRIMARY KEY,
+   name VARCHAR (250) NOT NULL,
+   lastname VARCHAR (250) NOT NULL,
+   email VARCHAR (300) UNIQUE NOT NULL,
+   password VARCHAR (250) NOT NULL,
+   created_at TIMESTAMPTZ DEFAULT NOW(),
+   updated_at TIMESTAMPTZ DEFAULT NOW()
+);
