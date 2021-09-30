@@ -86,3 +86,19 @@ func (pir *ProductInventoryRepo) All() ([]models.ProductInventory, error) {
 
 	return productsInInventory, nil
 }
+
+func (pir *ProductInventoryRepo) InserProductInInventory(pi models.ProductInventory, id string) (models.ProductInventory, error) {
+	stmt, err := pir.db.Prepare("INSERT INTO product_inventory (product_id, stock) VALUES ($1, $2)")
+
+	if err != nil {
+		return models.ProductInventory{}, err
+	}
+
+	_, err = stmt.Query(pi.ProductId, pi.Stock)
+	if err != nil {
+		return models.ProductInventory{}, err
+	}
+
+	return pi, nil
+
+}
