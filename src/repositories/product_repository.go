@@ -25,24 +25,23 @@ func NewProductRepo(db *sql.DB) *ProductRepo {
 	}
 }
 
-func (pr *ProductRepo) GetByTitle(name string) (models.Product, error) {
+func (pr *ProductRepo) GetByTitle(name string, product *models.Product) error {
 	stmt, err := pr.db.Prepare("SELECT * FROM product WHERE title = $1")
-	var product models.Product
 	if err != nil {
-		return models.Product{}, err
+		return err
 	}
 
 	result, err := stmt.Query(name)
 	if err != nil {
-		return models.Product{}, err
+		return err
 	}
 
 	err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.CreatedAt, &product.UpdatedAt)
 	if err != nil {
-		return models.Product{}, err
+		return err
 	}
 
-	return product, nil
+	return nil
 }
 
 func (pr *ProductRepo) GetById(id string) (models.Product, error) {
