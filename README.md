@@ -1,6 +1,6 @@
 # go_ecommerce
 
-Is a API project to study repository pattern and table relationship in e-commerce using postgres as database
+It's an API project to study repository pattern and table relationship in e-commerce using postgres as database
 
 ## Usage
 
