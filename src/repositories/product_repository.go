@@ -107,7 +107,8 @@ func (pr *ProductRepo) InserProduct(product models.Product, quantity int) (model
 }
 
 func (pr *ProductRepo) UpdateProduct(product models.Product, id string) error {
-	err := pr.GetById(id, nil)
+	var pd models.Product
+	err := pr.GetById(id, &pd)
 	if err != nil {
 		return err
 	}
