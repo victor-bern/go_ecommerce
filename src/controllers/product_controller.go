@@ -80,7 +80,7 @@ func InsertProduct(ctx *fiber.Ctx) {
 		return
 	}
 
-	ctx.Status(200).JSON(fiber.Map{
+	ctx.Status(201).JSON(fiber.Map{
 		"Message": "product created with success",
 	})
 }
@@ -110,4 +110,19 @@ func UpdateProduct(ctx *fiber.Ctx) {
 	ctx.Status(200).JSON(fiber.Map{
 		"Message": "product updated with success",
 	})
+}
+
+func DeleteProduct(ctx *fiber.Ctx) {
+	pr := repositories.NewProductRepo(database.GetDatabase())
+	id := ctx.Params("id")
+
+	err := pr.DeleteProduct(id)
+	if err != nil {
+		ctx.Status(400).JSON(fiber.Map{
+			"Error": err.Error(),
+		})
+		return
+	}
+
+	ctx.Status(204)
 }

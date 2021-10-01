@@ -25,7 +25,7 @@ func ConfigRoutes(r *fiber.App) *fiber.App {
 			product.Get("/getbytitle/title::title", controllers.GetProductByTitle)
 			product.Post("/create", controllers.InsertProduct)
 			product.Put("/update/id::id", controllers.UpdateProduct)
-			//product.Get("/delete/id::id")
+			product.Delete("/delete/id::id", controllers.DeleteProduct)
 		}
 
 	}
