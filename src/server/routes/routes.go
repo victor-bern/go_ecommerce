@@ -20,9 +20,9 @@ func ConfigRoutes(r *fiber.App) *fiber.App {
 
 		product := router.Group("/product")
 		{
-			product.Get("/all", controllers.GetAllproduct)
-			//product.Get("/getbyid/id::id")
-			//product.Get("/getbytitle/title::title", controllers.GetProductByTitle)
+			//product.Get("/all", controllers.GetAllproduct)
+			product.Get("/getbyid/id::id", controllers.GetProductById)
+			product.Get("/getbytitle/title::title", controllers.GetProductByTitle)
 			product.Post("/create", controllers.InsertProduct)
 			//product.Put("/update/id::id")
 			//product.Get("/delete/id::id")

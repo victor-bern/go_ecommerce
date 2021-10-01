@@ -38,6 +38,22 @@ func GetProductByTitle(ctx *fiber.Ctx) {
 	ctx.Status(200).JSON(product)
 }
 
+func GetProductById(ctx *fiber.Ctx) {
+	var product models.Product
+	productRepo := repositories.NewProductRepo(database.GetDatabase())
+	id := ctx.Params("id")
+
+	err := productRepo.GetById(id, &product)
+	if err != nil {
+		ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"Error": err.Error(),
+		})
+		return
+	}
+
+	ctx.Status(200).JSON(product)
+}
+
 func InsertProduct(ctx *fiber.Ctx) {
 	var product models.ProductRequest
 	productRepo := repositories.NewProductRepo(database.GetDatabase())

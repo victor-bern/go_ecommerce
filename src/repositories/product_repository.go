@@ -35,16 +35,18 @@ func (pr *ProductRepo) GetByTitle(name string, product *models.Product) error {
 		return err
 	}
 
-	err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.CreatedAt, &product.UpdatedAt)
-	if err != nil {
-		return err
+	for result.Next() {
+		err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.CreatedAt, &product.UpdatedAt)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
 func (pr *ProductRepo) GetById(id string, product *models.Product) error {
-	stmt, err := pr.db.Prepare("SELECT * FROM product WHERE id = $1")
+	stmt, err := pr.db.Prepare("SELECT p.id, p.title, p.description, p.price, pi.stock, p.created_at, p.updated_at FROM product AS p JOIN product_inventory AS pi ON p.id = pi.product_id WHERE p.id = $1")
 	if err != nil {
 		return err
 	}
@@ -54,9 +56,12 @@ func (pr *ProductRepo) GetById(id string, product *models.Product) error {
 		return err
 	}
 
-	err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.CreatedAt, &product.UpdatedAt)
-	if err != nil {
-		return err
+	for result.Next() {
+		err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.Stock, &product.CreatedAt, &product.UpdatedAt)
+		if err != nil {
+			return err
+		}
+
 	}
 
 	return nil
