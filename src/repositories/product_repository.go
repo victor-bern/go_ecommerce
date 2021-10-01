@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
 	"pg-conn/src/models"
 )
 
@@ -85,24 +84,17 @@ func (pr *ProductRepo) All() ([]models.Product, error) {
 }
 
 func (pr *ProductRepo) InserProduct(product models.Product, quantity int) (models.Product, error) {
-	stmt, err := pr.db.Prepare("INSERT INTO product (title, description, price) VALUES ($1, $2, $3)")
-	if err != nil {
-		return models.Product{}, err
-	}
-
-	result, err := stmt.Exec(product.Title, product.Description, product.Price)
+	id := 0
+	err := pr.db.QueryRow("INSERT INTO product (title, description, price) VALUES ($1, $2, $3) RETURNING id", product.Title, product.Description, product.Price).Scan(&id)
 	if err != nil {
 		return models.Product{}, err
 	}
 
 	pir := NewProductInventoryRepo(pr.db)
-	lid, err := result.LastInsertId()
-	if err != nil {
-		return models.Product{}, err
-	}
+
 	_, err = pir.InserProductInInventory(models.ProductInventory{
 		Stock: quantity,
-	}, fmt.Sprint(lid))
+	}, id)
 
 	if err != nil {
 		return models.Product{}, err
