@@ -43,24 +43,23 @@ func (pr *ProductRepo) GetByTitle(name string, product *models.Product) error {
 	return nil
 }
 
-func (pr *ProductRepo) GetById(id string) (models.Product, error) {
+func (pr *ProductRepo) GetById(id string, product *models.Product) error {
 	stmt, err := pr.db.Prepare("SELECT * FROM product WHERE id = $1")
-	var product models.Product
 	if err != nil {
-		return models.Product{}, err
+		return err
 	}
 
 	result, err := stmt.Query(id)
 	if err != nil {
-		return models.Product{}, err
+		return err
 	}
 
 	err = result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.CreatedAt, &product.UpdatedAt)
 	if err != nil {
-		return models.Product{}, err
+		return err
 	}
 
-	return product, nil
+	return nil
 }
 
 func (pr *ProductRepo) All() ([]models.Product, error) {
@@ -103,7 +102,7 @@ func (pr *ProductRepo) InserProduct(product models.Product, quantity int) (model
 }
 
 func (pr *ProductRepo) UpdateProduct(product models.Product, id string) error {
-	_, err := pr.GetById(id)
+	err := pr.GetById(id, nil)
 	if err != nil {
 		return err
 	}
