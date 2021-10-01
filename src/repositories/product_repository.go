@@ -64,7 +64,7 @@ func (pr *ProductRepo) GetById(id string) (models.Product, error) {
 }
 
 func (pr *ProductRepo) All() ([]models.Product, error) {
-	stmt, err := pr.db.Prepare("SELECT * FROM product")
+	stmt, err := pr.db.Prepare("SELECT q.id, q.title, q.description, q.price, pi.stock, q.created_at, q.updated_at FROM product AS q JOIN product_inventory AS pi ON q.id = pi.product_id")
 	var products []models.Product
 	if err != nil {
 		return []models.Product{}, err
@@ -76,7 +76,7 @@ func (pr *ProductRepo) All() ([]models.Product, error) {
 	}
 	for result.Next() {
 		var product models.Product
-		result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.CreatedAt, &product.UpdatedAt)
+		result.Scan(&product.ID, &product.Title, &product.Description, &product.Price, &product.Stock, &product.CreatedAt, &product.UpdatedAt)
 		products = append(products, product)
 	}
 
